@@ -1,0 +1,106 @@
+<UserControl x:Class="TeachFlex.Views.ActivitySheetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30">
+            <TextBlock Text="Activity Sheet Generator" FontSize="28" FontWeight="Bold"
+                       Foreground="{StaticResource TextPrimaryBrush}"/>
+            <TextBlock Text="Offline · batay sa saved ILAW plan · editable learner activity at teacher guide"
+                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,16"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="290"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Saved Activity Sheets" FontSize="18" FontWeight="Bold"/>
+                        <Button Content="＋ New Sheet" Command="{Binding NewSheetCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" MinHeight="46" Margin="0,12"/>
+                        <ListBox ItemsSource="{Binding SavedSheets}"
+                                 SelectedItem="{Binding SelectedSheet, Mode=TwoWay}"
+                                 DisplayMemberPath="DisplayName" MinHeight="400"/>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Create from an ILAW Lesson Plan" FontSize="18" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,5,0,12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="Saved Plan" FontWeight="SemiBold"/>
+                        <ComboBox ItemsSource="{Binding SavedPlans}" SelectedItem="{Binding SelectedPlan, Mode=TwoWay}"
+                                  DisplayMemberPath="DisplayName" Height="36" Margin="0,5,0,12"/>
+                        <TextBlock Text="Session" FontWeight="SemiBold"/>
+                        <ComboBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding Session, Mode=TwoWay}"
+                                  Width="100" HorizontalAlignment="Left" Height="36" Margin="0,5,0,12"/>
+                        <TextBlock Text="Bilang ng items" FontWeight="SemiBold"/>
+                        <TextBlock Text="Halo ang remembering, understanding, applying, at analyzing. Nasa teacher copy ang level at answer key."
+                                   TextWrapping="Wrap" Margin="0,5,0,8" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <ComboBox ItemsSource="{Binding ItemCounts}" SelectedItem="{Binding ItemCount, Mode=TwoWay}"
+                                  Width="100" HorizontalAlignment="Left" Height="36" Margin="0,5,0,12"/>
+                        <Button Content="Bumuo ng Multiple-Choice Activity" Command="{Binding GenerateDraftCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" MinHeight="46" Margin="0,0,0,12"/>
+                        <Expander Header="Online Images · Wikimedia Commons" IsExpanded="True" Margin="0,0,0,12" Padding="8">
+                            <StackPanel>
+                                <TextBlock Text="Maghanap ng larawang angkop sa gawain. Piliin at suriin ang source at lisensiya."
+                                           TextWrapping="Wrap" Margin="0,4,0,8"/>
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Content="Search Images" Command="{Binding SearchImagesCommand}"
+                                            Style="{StaticResource SecondaryButtonStyle}" Width="140" MinHeight="46" Margin="8,0,0,0"/>
+                                    <TextBox Text="{Binding ImageSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="46" VerticalContentAlignment="Center"/>
+                                </DockPanel>
+                                <ListBox ItemsSource="{Binding ImageResults}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="170" Margin="0,8,0,8">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap"
+                                                       MaxWidth="660" Margin="2,5"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <WrapPanel>
+                                    <Button Content="Gamitin ang Larawan" Command="{Binding AttachImageCommand}"
+                                            Style="{StaticResource PrimaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                                    <Button Content="Remove Image" Command="{Binding RemoveImageCommand}"
+                                            Style="{StaticResource SecondaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                                    <Button Content="Pumili ng Larawan sa Computer" Command="{Binding ChooseLocalImageCommand}"
+                                            Style="{StaticResource SecondaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                                </WrapPanel>
+                                <Image Source="{Binding ImagePreview}" Height="140" Stretch="Uniform" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding ImageCredit}" TextWrapping="Wrap" FontSize="11" Margin="0,6,0,0"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </StackPanel>
+                        </Expander>
+                        <TextBlock Text="Title" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,4,0,12"/>
+                        <TextBlock Text="Panuto para sa learner" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding Instructions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 TextWrapping="Wrap" AcceptsReturn="True" MinHeight="65" Margin="0,4,0,12"/>
+                        <TextBlock Text="Learner Sheet · questions and activities" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding Questions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                                 MinHeight="215" Margin="0,4,0,12"/>
+                        <TextBlock Text="Teacher Guide · exact answers and acceptable responses" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding TeacherGuide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                                 MinHeight="190" Margin="0,4,0,12"/>
+                        <TextBlock Text="Para muna sa ordering numbers hanggang 100/1000 ang verified question bank. Randomized ang tanong at choices; suriin pa rin ni teacher ang lahat ng items. Ibang competency: manual activity muna."
+                                   TextWrapping="Wrap" Margin="0,0,0,12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <WrapPanel>
+                            <Button Content="Save Sheet" Command="{Binding SaveCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                            <Button Content="Export Learner PDF" Command="{Binding ExportLearnerCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                            <Button Content="Export Teacher PDF" Command="{Binding ExportTeacherCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}" MinHeight="46" Margin="0,0,8,8"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

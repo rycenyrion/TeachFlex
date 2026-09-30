@@ -1,0 +1,98 @@
+<UserControl x:Class="TeachFlex.Views.ReadingTrackerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="30">
+      <TextBlock Text="Reading Tracker" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+      <TextBlock Text="Reading assessment, intervention, at progress ng bawat learner" Margin="0,5,0,16" Foreground="{StaticResource TextSecondaryBrush}"/>
+      <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+        <StackPanel>
+          <TextBlock Text="Class at Learner" FontSize="18" FontWeight="Bold"/>
+          <TextBlock Text="{Binding SchoolYearText}" Margin="0,4,0,10" Foreground="{StaticResource TextSecondaryBrush}"/>
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="Class" FontWeight="SemiBold"/>
+              <ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, Mode=TwoWay}" DisplayMemberPath="DisplayName" Height="36" Margin="0,4,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="Learner" FontWeight="SemiBold"/>
+              <ComboBox ItemsSource="{Binding Learners}" SelectedItem="{Binding SelectedLearner, Mode=TwoWay}" DisplayMemberPath="FullName" Height="36" Margin="0,4,0,0"/>
+            </StackPanel>
+          </Grid>
+          <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,10,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+          <TextBlock Text="{Binding GradeGuide}" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{StaticResource TextPrimaryBrush}"/>
+        </StackPanel>
+      </Border>
+      <Grid Margin="0,0,0,12">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="ASSESSMENTS" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Text="{Binding AssessmentCount}" FontSize="24" FontWeight="Bold"/></StackPanel></Border>
+        <Border Grid.Column="2" Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="LATEST READING LEVEL" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Text="{Binding LatestLevel}" FontSize="19" FontWeight="Bold" TextWrapping="Wrap"/></StackPanel></Border>
+        <Border Grid.Column="4" Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="CHANGE IN WORD ACCURACY" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Text="{Binding ProgressText}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/></StackPanel></Border>
+      </Grid>
+      <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+        <StackPanel>
+          <DockPanel Margin="0,0,0,12">
+            <TextBlock Text="Reading Assessment" FontSize="18" FontWeight="Bold" DockPanel.Dock="Left"/>
+            <Button Content="New Assessment" Command="{Binding NewRecordCommand}" Style="{StaticResource SecondaryButtonStyle}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+          </DockPanel>
+          <TextBlock Text="Mga mungkahing pagpipilian ayon sa baitang. Puwedeng mag-type ng ibang tool o level. Ilagay ang aktuwal na resulta; si teacher ang magpapasya ng reading level ayon sa ginamit na assessment." TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10"/>
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="Assessment Date"/>
+              <DatePicker SelectedDate="{Binding AssessmentDate, Mode=TwoWay}" Height="34" Margin="0,4,0,9"/>
+              <TextBlock Text="Tool / Reading Assessment *"/>
+              <ComboBox ItemsSource="{Binding SuggestedTools}" Text="{Binding AssessmentTool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" IsTextSearchEnabled="False" Height="34" Margin="0,4,0,9"/>
+              <TextBlock Text="Passage / Material"/>
+              <TextBox Text="{Binding PassageOrMaterial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="34" Margin="0,4,0,9"/>
+              <TextBlock Text="Reading Level (teacher-entered)"/>
+              <ComboBox ItemsSource="{Binding SuggestedLevels}" Text="{Binding ReadingLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" IsTextSearchEnabled="False" Height="34" Margin="0,4,0,9"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="Words Read Correctly / Words Attempted (optional)"/>
+              <StackPanel Orientation="Horizontal" Margin="0,4,0,9">
+                <TextBox Text="{Binding WordsCorrect, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="90" Height="34"/>
+                <TextBlock Text=" / " VerticalAlignment="Center"/>
+                <TextBox Text="{Binding WordsAttempted, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="90" Height="34"/>
+                <TextBlock Text="{Binding PreviewAccuracy}" VerticalAlignment="Center" Margin="12,0,0,0" FontWeight="Bold"/>
+              </StackPanel>
+              <TextBlock Text="Comprehension Correct / Total (optional)"/>
+              <StackPanel Orientation="Horizontal" Margin="0,4,0,9">
+                <TextBox Text="{Binding ComprehensionCorrect, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="90" Height="34"/>
+                <TextBlock Text=" / " VerticalAlignment="Center"/>
+                <TextBox Text="{Binding ComprehensionTotal, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="90" Height="34"/>
+              </StackPanel>
+              <TextBlock Text="Intervention / Next Step"/>
+              <TextBox Text="{Binding Intervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="52" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,4,0,9"/>
+            </StackPanel>
+          </Grid>
+          <TextBlock Text="Teacher Notes"/>
+          <TextBox Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,4,0,12"/>
+          <StackPanel Orientation="Horizontal">
+            <Button Content="Save Assessment" Command="{Binding SaveRecordCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="38" Margin="0,0,10,0"/>
+            <Button Content="Delete Selected Assessment" Command="{Binding DeleteRecordCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="38"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      <Border Style="{StaticResource CardStyle}">
+        <StackPanel>
+          <TextBlock Text="Assessment History" FontSize="18" FontWeight="Bold" Margin="0,0,0,8"/>
+          <TextBlock Text="Pumili ng row para tingnan o baguhin ang record." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+          <DataGrid ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" MinHeight="170" MaxHeight="330">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Date" Binding="{Binding AssessmentDate, StringFormat=yyyy-MM-dd}" Width="110"/>
+              <DataGridTextColumn Header="Grade" Binding="{Binding GradeLevel}" Width="85"/>
+              <DataGridTextColumn Header="Tool" Binding="{Binding AssessmentTool}" Width="*"/>
+              <DataGridTextColumn Header="Reading Level" Binding="{Binding ReadingLevel}" Width="*"/>
+              <DataGridTextColumn Header="Accuracy" Binding="{Binding AccuracyText}" Width="90"/>
+              <DataGridTextColumn Header="Comprehension" Binding="{Binding ComprehensionText}" Width="115"/>
+              <DataGridTextColumn Header="Intervention" Binding="{Binding Intervention}" Width="2*"/>
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

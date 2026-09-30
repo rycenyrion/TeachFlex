@@ -1,0 +1,990 @@
+﻿<UserControl x:Class="TeachFlex.Views.LearnersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+
+    <UserControl.Resources>
+        <Style x:Key="LearnerFieldStyle"
+               TargetType="TextBox">
+
+            <Setter Property="Height"
+                    Value="42"/>
+
+            <Setter Property="Padding"
+                    Value="11,7"/>
+
+            <Setter Property="FontSize"
+                    Value="13"/>
+
+            <Setter Property="Background"
+                    Value="White"/>
+
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextPrimaryBrush}"/>
+
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource BorderBrush}"/>
+
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
+        </Style>
+
+        <Style x:Key="LearnerLabelStyle"
+               TargetType="TextBlock">
+
+            <Setter Property="Foreground"
+                    Value="{StaticResource TextPrimaryBrush}"/>
+
+            <Setter Property="FontSize"
+                    Value="11"/>
+
+            <Setter Property="FontWeight"
+                    Value="SemiBold"/>
+
+            <Setter Property="Margin"
+                    Value="0,0,0,7"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0"
+                  Margin="0,0,0,22">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Learner Management"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="28"
+                               FontWeight="Bold"/>
+
+                    <TextBlock Text="Import, edit, and manage learners by class."
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13"
+                               Margin="0,6,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+
+                    <Button Content="Import Learners from SF1"
+                            Command="{Binding ImportSf1LearnersCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            MinWidth="190"
+                            Height="44"
+                            ToolTip="Import learners from an official DepEd SF1 Excel file"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Class and search -->
+            <Border Grid.Row="1"
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,18">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Advisory Class"
+                                   Style="{StaticResource LearnerLabelStyle}"/>
+
+                        <ComboBox ItemsSource="{Binding Classes}"
+                                  SelectedItem="{Binding SelectedClass}"
+                                  DisplayMemberPath="DisplayName"
+                                  Height="42"
+                                  Padding="10,7"
+                                  FontSize="13"
+                                  Background="White"
+                                  BorderBrush="{StaticResource BorderBrush}"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="2"
+                            Content="Refresh"
+                            Command="{Binding RefreshCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            MinWidth="95"
+                            VerticalAlignment="Bottom"/>
+                </Grid>
+            </Border>
+
+            <!-- School year promotion -->
+            <Border Grid.Row="2"
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,18"
+                    Background="#F4FBF6"
+                    BorderBrush="#A7D7B2">
+
+                <StackPanel>
+                    <TextBlock Text="Learner Promotion / Re-enrollment"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="17"
+                               FontWeight="Bold"/>
+
+                    <TextBlock Text="Copy eligible learners from the selected advisory class into a future school year. Previous grades and attendance remain unchanged."
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,4,0,17"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Destination School Year"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <ComboBox ItemsSource="{Binding PromotionAcademicYears}"
+                                      SelectedItem="{Binding SelectedPromotionAcademicYear}"
+                                      DisplayMemberPath="DisplayName"
+                                      Height="42"
+                                      Padding="10,7"
+                                      FontSize="13"
+                                      Background="White"
+                                      BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Promotion Type"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <ComboBox ItemsSource="{Binding PromotionTypeOptions}"
+                                      SelectedItem="{Binding SelectedPromotionType}"
+                                      Height="42"
+                                      Padding="10,7"
+                                      FontSize="13"
+                                      Background="White"
+                                      BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Destination Class"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <ComboBox ItemsSource="{Binding PromotionClasses}"
+                                      SelectedItem="{Binding SelectedPromotionClass}"
+                                      DisplayMemberPath="DisplayName"
+                                      Height="42"
+                                      Padding="10,7"
+                                      FontSize="13"
+                                      Background="White"
+                                      BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="6"
+                                Content="Process Class Learners"
+                                Command="{Binding PromoteClassCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                MinWidth="175"
+                                Height="42"
+                                VerticalAlignment="Bottom"/>
+                    </Grid>
+
+                    <TextBlock Text="Promoted requires the next grade level. Retained requires the same grade level. Existing destination enrollments are skipped automatically."
+                               Foreground="#166534"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Learner editor -->
+            <Border Grid.Row="3"
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,18">
+
+                <StackPanel>
+                    <TextBlock Text="Learner Information"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="17"
+                               FontWeight="Bold"/>
+
+                    <TextBlock Text="Select a learner below to edit the record. Fields marked with * are required."
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="11"
+                               Margin="0,4,0,20"/>
+
+                    <!-- Row 1 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="LRN *"
+                   Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox Text="{Binding Lrn,
+                          UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource LearnerFieldStyle}"
+                 MaxLength="12"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock
+            Text="Learner Name *  (LAST NAME, FIRST NAME, M.I.)"
+            Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox
+            Text="{Binding LearnerName,
+                UpdateSourceTrigger=PropertyChanged}"
+            Style="{StaticResource LearnerFieldStyle}"
+            MaxLength="250"
+            ToolTip="Example: DELA CRUZ, JUAN P."/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Row 2 -->
+                    <Grid Margin="0,18,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.7*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1.1*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1.1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Suffix"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox Text="{Binding Suffix,
+                                              UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource LearnerFieldStyle}"
+                                     MaxLength="20"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Sex *"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <ComboBox ItemsSource="{Binding SexOptions}"
+                                      SelectedItem="{Binding Sex}"
+                                      Height="42"
+                                      Padding="10,7"
+                                      FontSize="13"
+                                      Background="White"
+                                      BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Birthdate"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <DatePicker SelectedDate="{Binding BirthDate}"
+                                        Height="42"
+                                        FontSize="13"
+                                        BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="6">
+                            <TextBlock Text="Status"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <ComboBox ItemsSource="{Binding StatusOptions}"
+                                      SelectedItem="{Binding LearnerStatus}"
+                                      Height="42"
+                                      Padding="10,7"
+                                      FontSize="13"
+                                      Background="White"
+                                      BorderBrush="{StaticResource BorderBrush}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Row 3 -->
+                    <Grid Margin="0,18,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Address"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox Text="{Binding Address,
+                                              UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource LearnerFieldStyle}"
+                                     MaxLength="250"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Parent / Guardian"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox Text="{Binding ParentGuardianName,
+                                              UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource LearnerFieldStyle}"
+                                     MaxLength="150"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Contact Number"
+                                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                            <TextBox
+                                Text="{Binding ParentGuardianContactNumber,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource LearnerFieldStyle}"
+                                MaxLength="30"/>
+                        </StackPanel>
+                    </Grid>
+                    <!-- SF1 personal and address information -->
+                    <Border Margin="0,22,0,0"
+        Padding="18"
+        Background="#FFFDF5"
+        BorderBrush="#F2D675"
+        BorderThickness="1"
+        CornerRadius="10">
+
+                        <StackPanel>
+                            <TextBlock Text="SF1 Personal and Address Information"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   FontSize="14"
+                   FontWeight="Bold"/>
+
+                            <TextBlock Text="These fields are used when generating the prescribed School Form 1."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   Margin="0,4,0,16"/>
+
+                            <!-- Personal information -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Mother Tongue"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding MotherTongue,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="IP / Ethnic Group"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding IndigenousPeopleEthnicGroup,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Religion"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding Religion,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="6">
+                                    <TextBlock Text="Learning Modality"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <ComboBox ItemsSource="{Binding LearningModalityOptions}"
+                          SelectedItem="{Binding LearningModality}"
+                          Height="42"
+                          Padding="10,7"
+                          FontSize="13"
+                          Background="White"
+                          BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Address Components"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   FontSize="12"
+                   FontWeight="SemiBold"
+                   Margin="0,20,0,12"/>
+
+                            <!-- Detailed address -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="House / Street / Sitio / Purok"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding HouseStreetSitioPurok,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Barangay"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding Barangay,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Municipality / City"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding MunicipalityCity,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="6">
+                                    <TextBlock Text="Province"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding Province,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="The complete Address field will be updated automatically when the learner is saved."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   FontStyle="Italic"
+                   Margin="0,13,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- SF1 parent and guardian information -->
+                    <Border Margin="0,18,0,0"
+        Padding="18"
+        Background="#F8FBFF"
+        BorderBrush="{StaticResource BorderBrush}"
+        BorderThickness="1"
+        CornerRadius="10">
+
+                        <StackPanel>
+                            <TextBlock Text="SF1 Parent and Guardian Information"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   FontSize="14"
+                   FontWeight="Bold"/>
+
+                            <TextBlock Text="Enter the complete names in Last Name, First Name, Middle Name format."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   Margin="0,4,0,16"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Father's Complete Name"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding FatherName,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Mother's Maiden Name"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding MotherMaidenName,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.4*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Guardian Name (if not a parent)"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding GuardianName,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Relationship"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <ComboBox ItemsSource="{Binding GuardianRelationshipOptions}"
+                          SelectedItem="{Binding GuardianRelationship}"
+                          Height="42"
+                          Padding="10,7"
+                          FontSize="13"
+                          Background="White"
+                          BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Parent / Guardian Contact Number"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding ParentGuardianContactNumber,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="30"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SF1 indicators -->
+                    <Border Margin="0,18,0,0"
+        Padding="18"
+        Background="#FFF8F3"
+        BorderBrush="#F3C7A8"
+        BorderThickness="1"
+        CornerRadius="10">
+
+                        <StackPanel>
+                            <TextBlock Text="SF1 Learner Indicators"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   FontSize="14"
+                   FontWeight="Bold"/>
+
+                            <TextBlock Text="Select only the indicators applicable to this learner."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   Margin="0,4,0,16"/>
+
+                            <!-- CCT -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                      Content="CCT Recipient"
+                      IsChecked="{Binding IsCctRecipient}"
+                      Foreground="{StaticResource TextPrimaryBrush}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="CCT Control / Reference Number"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding CctReferenceNumber,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsCctRecipient}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Balik-Aral -->
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                      Content="Balik-Aral"
+                      IsChecked="{Binding IsBalikAral}"
+                      Foreground="{StaticResource TextPrimaryBrush}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Last School Attended"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding LastSchoolAttended,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsBalikAral}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Last School Year Attended"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding LastSchoolYearAttended,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsBalikAral}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="30"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- SNED -->
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                      Content="Special Needs Education"
+                      IsChecked="{Binding IsSpecialNeedsEducation}"
+                      Foreground="{StaticResource TextPrimaryBrush}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Special Needs Details"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding SpecialNeedsDetails,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsSpecialNeedsEducation}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="200"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Accelerated -->
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="2.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                      Content="Accelerated"
+                      IsChecked="{Binding IsAccelerated}"
+                      Foreground="{StaticResource TextPrimaryBrush}"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"/>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Accelerated Level"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding AcceleratedLevel,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsAccelerated}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="100"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Margin="0,16,0,0">
+                                <TextBlock Text="Additional SF1 Remarks"
+                       Style="{StaticResource LearnerLabelStyle}"/>
+
+                                <TextBox Text="{Binding Sf1Remarks,
+                                  UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource LearnerFieldStyle}"
+                     MaxLength="300"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <!-- Enrollment and movement history -->
+                    <Border Margin="0,22,0,0"
+        Padding="18"
+        Background="#F8FBFF"
+        BorderBrush="{StaticResource BorderBrush}"
+        BorderThickness="1"
+        CornerRadius="10">
+
+                        <StackPanel>
+                            <TextBlock Text="Enrollment and Movement Information"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   FontSize="14"
+                   FontWeight="Bold"/>
+
+                            <TextBlock Text="Used for the official SF2 enrolment, transfer, and dropout summary."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   Margin="0,4,0,16"/>
+
+                            <!-- Enrollment row -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1.6*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Enrollment Date"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <DatePicker SelectedDate="{Binding EnrollmentDate}"
+                            Height="42"
+                            FontSize="13"
+                            BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Enrollment Type"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <ComboBox ItemsSource="{Binding EnrollmentTypeOptions}"
+                          SelectedItem="{Binding EnrollmentType}"
+                          Height="42"
+                          Padding="10,7"
+                          FontSize="13"
+                          Background="White"
+                          BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Previous School (Transferred In)"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding PreviousSchoolName,
+                                   UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="250"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Exit row -->
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="1.6*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Exit Date"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <DatePicker SelectedDate="{Binding ExitDate}"
+                            Height="42"
+                            FontSize="13"
+                            BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Exit Reason"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <ComboBox ItemsSource="{Binding ExitReasonOptions}"
+                          SelectedItem="{Binding ExitReason}"
+                          Height="42"
+                          Padding="10,7"
+                          FontSize="13"
+                          Background="White"
+                          BorderBrush="{StaticResource BorderBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Next School (Transferred Out)"
+                           Style="{StaticResource LearnerLabelStyle}"/>
+
+                                    <TextBox Text="{Binding NextSchoolName,
+                                   UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource LearnerFieldStyle}"
+                         MaxLength="250"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Leave the exit fields blank while the learner remains active in the class."
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   FontSize="10"
+                   FontStyle="Italic"
+                   Margin="0,13,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Actions -->
+                    <Grid Margin="0,24,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="11"
+                                   VerticalAlignment="Center"/>
+
+                        <Button Grid.Column="1"
+        Content="Delete Learner"
+        Command="{Binding DeleteLearnerCommand}"
+        Style="{StaticResource SecondaryButtonStyle}"
+        MinWidth="135"
+        Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="2"
+                                Content="Save Learner"
+                                Command="{Binding SaveLearnerCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                MinWidth="135"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Learner list -->
+            <Border Grid.Row="4"
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,12">
+
+                <StackPanel>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Class Learners"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       FontSize="17"
+                                       FontWeight="Bold"/>
+
+                            <TextBlock Text="Learners are automatically arranged by Male, Female, and surname."
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       FontSize="11"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <Border Grid.Column="1"
+                                Background="{StaticResource PrimaryLightBrush}"
+                                CornerRadius="8"
+                                Padding="11,6"
+                                VerticalAlignment="Center">
+
+                            <TextBlock
+                                Text="{Binding Learners.Count,
+                                    StringFormat={}{0} LEARNER(S)}"
+                                Foreground="{StaticResource PrimaryDarkBrush}"
+                                FontSize="10"
+                                FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+
+                    <DataGrid ItemsSource="{Binding Learners}"
+                              SelectedItem="{Binding SelectedLearner}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal"
+                              RowHeight="42"
+                              ColumnHeaderHeight="40"
+                              BorderBrush="{StaticResource BorderBrush}"
+                              BorderThickness="1"
+                              Background="White"
+                              AlternatingRowBackground="#F8FAFC">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="LRN"
+                                Binding="{Binding Lrn}"
+                                Width="1.2*"/>
+
+                            <DataGridTextColumn
+                                Header="Learner Name"
+                                Binding="{Binding FullName}"
+                                Width="2*"/>
+
+                            <DataGridTextColumn
+                                Header="Sex"
+                                Binding="{Binding Sex}"
+                                Width="0.8*"/>
+
+                            <DataGridTextColumn
+                                Header="Birthdate"
+                                Binding="{Binding BirthDate,
+    StringFormat='{}{0:MMM dd, yyyy}'}"
+                                Width="1.1*"/>
+
+                            <DataGridTextColumn
+                                Header="Age"
+                                Binding="{Binding Age}"
+                                Width="0.6*"/>
+
+                            <DataGridTextColumn
+                                Header="Status"
+                                Binding="{Binding Status}"
+                                Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

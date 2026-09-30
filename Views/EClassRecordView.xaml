@@ -1,0 +1,1326 @@
+﻿<UserControl x:Class="TeachFlex.Views.EClassRecordView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:TeachFlex.Views"
+             Background="Transparent">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+
+        <StackPanel Margin="28">
+
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Electronic Class Record"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                    <TextBlock Text="Record learner assessments and automatically compute official term grades."
+                               Margin="0,6,0,0"
+                               FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="Refresh"
+                        Command="{Binding RefreshCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        MinWidth="110"
+                        Margin="0,0,10,0"/>
+
+                <Button Grid.Column="2"
+                        Content="Export Official ECR"
+                        Command="{Binding ExportOfficialECRCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        MinWidth="175"/>
+            </Grid>
+
+            <!-- Class record selection -->
+            <Border Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,16">
+
+                <StackPanel>
+                    <TextBlock Text="Class Record Selection"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               Margin="0,0,0,16"/>
+
+                    <!-- Grade 1 to Grade 12 selection -->
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsKindergartenRecord}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Class *"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,7"/>
+
+                            <ComboBox ItemsSource="{Binding Classes}"
+                                      SelectedItem="{Binding SelectedClass}"
+                                      DisplayMemberPath="DisplayName"
+                                      MinHeight="42"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Subject *"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,7"/>
+
+                            <ComboBox ItemsSource="{Binding Subjects}"
+                                      SelectedItem="{Binding SelectedSubject}"
+                                      DisplayMemberPath="SubjectName"
+                                      MinHeight="42"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Term *"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,7"/>
+
+                            <ComboBox ItemsSource="{Binding TermOptions}"
+                                      SelectedItem="{Binding SelectedTerm}"
+                                      MinHeight="42"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="6"
+                                Content="Load Class Record"
+                                Command="{Binding LoadRecordCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                MinWidth="165"
+                                Height="42"
+                                VerticalAlignment="Bottom"/>
+                    </Grid>
+
+                    <!-- Kindergarten selection: no subject field -->
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsKindergartenRecord}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Class *"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,7"/>
+
+                            <ComboBox ItemsSource="{Binding Classes}"
+                                      SelectedItem="{Binding GuardedSelectedKindergartenClass,
+                                                             Mode=TwoWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      MinHeight="42"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Term *"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,7"/>
+
+                            <ComboBox ItemsSource="{Binding TermOptions}"
+                                      SelectedItem="{Binding GuardedSelectedKindergartenTerm,
+                                                             Mode=TwoWay}"
+                                      MinHeight="42"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Component setup -->
+                    <Border Margin="0,16,0,0"
+                            Padding="14"
+                            CornerRadius="10"
+                            Background="#F8FAFC"
+                            BorderBrush="#CBD5E1"
+                            BorderThickness="1">
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ShowsComponentSetup}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="1.4*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Record Mode *"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,7"/>
+
+                                <ComboBox ItemsSource="{Binding RecordModeOptions}"
+                                          SelectedItem="{Binding SelectedRecordMode}"
+                                          IsEnabled="{Binding CanSelectRecordMode}"
+                                          MinHeight="42"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Component 1"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,7"/>
+
+                                <TextBox Text="{Binding ComponentOneName,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditComponentNames}"
+                                         MinHeight="42"
+                                         VerticalContentAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Component 2"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,7"/>
+
+                                <TextBox Text="{Binding ComponentTwoName,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditComponentNames}"
+                                         MinHeight="42"
+                                         VerticalContentAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="6">
+                                <TextBlock Text="Active Component *"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,7"/>
+
+                                <ComboBox ItemsSource="{Binding ComponentOptions}"
+                                          SelectedItem="{Binding SelectedComponent}"
+                                          IsEnabled="{Binding UsesComponentRecords}"
+                                          MinHeight="42"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Grading information -->
+                    <Border Margin="0,16,0,0"
+                            Padding="14"
+                            CornerRadius="10"
+                            Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1">
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsKindergartenRecord}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <TextBlock Text="{Binding GradingSystemText}"
+                                           FontWeight="Bold"
+                                           Foreground="#1D4ED8"/>
+
+                                <TextBlock Text="{Binding AssessmentFormatText}"
+                                           Margin="0,4,0,0"
+                                           FontSize="12"
+                                           Foreground="#475569"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding SelectedTermText}"
+                                       FontWeight="Bold"
+                                       Foreground="#1D4ED8"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <!-- Kindergarten E-Class Record -->
+            <views:KindergartenEClassRecordView>
+
+                <views:KindergartenEClassRecordView.Style>
+                    <Style TargetType="{x:Type views:KindergartenEClassRecordView}">
+                        <Setter Property="Visibility"
+                    Value="Collapsed"/>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsKindergartenRecord}"
+                             Value="True">
+                                <Setter Property="Visibility"
+                            Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </views:KindergartenEClassRecordView.Style>
+            </views:KindergartenEClassRecordView>
+            <!-- Grade 1 descriptive PACE record -->
+            <Border Margin="0,0,0,16">
+
+                <Border.Style>
+                    <Style TargetType="Border"
+                           BasedOn="{StaticResource CardStyle}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed"/>
+
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding UsesDescriptiveGrades}"
+                                               Value="True"/>
+                                    <Condition Binding="{Binding IsKindergartenRecord}"
+                                               Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Grade 1 PACE Record"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="{Binding StatusMessage}"
+                                       Margin="0,4,0,0"
+                                       FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Border Background="#FEF3C7"
+                                    CornerRadius="7"
+                                    Padding="10,7"
+                                    Margin="0,0,10,0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasUnsavedPaceChanges}"
+                                                         Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                                <TextBlock Text="Unsaved changes"
+                                           FontWeight="SemiBold"
+                                           Foreground="#92400E"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <Button Content="Reload Record"
+                                    Command="{Binding ReloadGuardedPaceRecordCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    MinWidth="130"
+                                    Margin="0,0,10,0"/>
+
+                            <Button Content="Save PACE Record"
+                                    Command="{Binding SavePaceRecordCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    MinWidth="170"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12"
+                            Margin="0,0,0,16">
+
+                        <TextBlock Text="Choose a learner, then assign A, B, C, D, or E only after sufficient and varied evidence of learning."
+                                   Foreground="#1D4ED8"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="310"/>
+                            <ColumnDefinition Width="18"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Learner selector -->
+                        <Border Grid.Column="0"
+                                BorderBrush="#CBD5E1"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Background="#F8FAFC"
+                                Padding="10">
+
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top"
+                                           Text="Learners"
+                                           FontSize="15"
+                                           FontWeight="Bold"
+                                           Margin="4,2,4,10"/>
+
+                                <ListBox ItemsSource="{Binding PaceLearners}"
+                                         SelectedItem="{Binding GuardedSelectedPaceLearner}"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         MaxHeight="640"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment"
+                                                    Value="Stretch"/>
+                                            <Setter Property="Padding"
+                                                    Value="0"/>
+                                            <Setter Property="Margin"
+                                                    Value="0,0,0,6"/>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="10"
+                                                    Background="White"
+                                                    BorderBrush="#E2E8F0"
+                                                    BorderThickness="1"
+                                                    CornerRadius="7">
+
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="32"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Text="{Binding Number}"
+                                                               FontWeight="Bold"
+                                                               Foreground="#64748B"
+                                                               VerticalAlignment="Top"/>
+
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding LearnerName}"
+                                                                   FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis"/>
+
+                                                        <TextBlock Margin="0,3,0,0"
+                                                                   FontSize="10"
+                                                                   Foreground="#64748B">
+                                                            <Run Text="{Binding Sex}"/>
+                                                            <Run Text=" • "/>
+                                                            <Run Text="{Binding CompletionText,
+                                                                                Mode=OneWay}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Selected learner record -->
+                        <StackPanel Grid.Column="2"
+                                    DataContext="{Binding SelectedPaceLearner}">
+
+                            <Border Background="#F8FAFC"
+                                    BorderBrush="#CBD5E1"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="14"
+                                    Margin="0,0,0,12">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding LearnerName}"
+                                                   FontSize="17"
+                                                   FontWeight="Bold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                                        <TextBlock Margin="0,4,0,0"
+                                                   FontSize="11"
+                                                   Foreground="#64748B">
+                                            <Run Text="LRN: "/>
+                                            <Run Text="{Binding Lrn}"/>
+                                            <Run Text=" • "/>
+                                            <Run Text="{Binding Sex}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Border Grid.Column="1"
+                                            Background="#DBEAFE"
+                                            CornerRadius="7"
+                                            Padding="10,6"
+                                            VerticalAlignment="Center">
+
+                                        <TextBlock Text="{Binding CompletionText,
+                                                                  Mode=OneWay}"
+                                                   FontWeight="Bold"
+                                                   Foreground="#1D4ED8"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Content="Previous Learner"
+                                        Command="{Binding DataContext.MoveToPreviousPaceLearnerCommand,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        IsEnabled="{Binding DataContext.HasPreviousPaceLearner,
+                                                            RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        MinWidth="135"/>
+
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding DataContext.PaceLearnerPositionText,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontWeight="SemiBold"
+                                           Foreground="#475569"/>
+
+                                <Button Grid.Column="2"
+                                        Content="Next Learner"
+                                        Command="{Binding DataContext.MoveToNextPaceLearnerCommand,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        IsEnabled="{Binding DataContext.HasNextPaceLearner,
+                                                            RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        MinWidth="135"/>
+                            </Grid>
+
+                            <TextBlock Text="Learning Competencies"
+                                       FontSize="15"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,8"/>
+
+                            <Border BorderBrush="#CBD5E1"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Background="White"
+                                    Margin="0,0,0,14">
+
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              MaxHeight="430">
+
+                                    <ItemsControl ItemsSource="{Binding Ratings}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="#E2E8F0"
+                                                        BorderThickness="0,0,0,1"
+                                                        Padding="12">
+
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="75"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="100"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border Grid.Column="0"
+                                                                Background="#EFF6FF"
+                                                                CornerRadius="5"
+                                                                Padding="6,4"
+                                                                Margin="0,0,10,0"
+                                                                VerticalAlignment="Top">
+
+                                                            <TextBlock Text="{Binding CompetencyCode}"
+                                                                       FontWeight="Bold"
+                                                                       Foreground="#1D4ED8"
+                                                                       TextAlignment="Center"/>
+                                                        </Border>
+
+                                                        <StackPanel Grid.Column="1"
+                                                                    Margin="0,0,14,0">
+                                                            <TextBlock Text="{Binding DomainName}"
+                                                                       FontSize="10"
+                                                                       FontWeight="SemiBold"
+                                                                       Foreground="#2563EB"
+                                                                       TextWrapping="Wrap"/>
+
+                                                            <TextBlock Text="{Binding Description}"
+                                                                       Margin="0,4,0,0"
+                                                                       FontSize="12"
+                                                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                                                       TextWrapping="Wrap"/>
+
+                                                            <TextBlock Text="{Binding RatingDescription}"
+                                                                       Margin="0,4,0,0"
+                                                                       FontSize="10"
+                                                                       FontStyle="Italic"
+                                                                       Foreground="#64748B"/>
+                                                        </StackPanel>
+
+                                                        <ComboBox Grid.Column="2"
+                                                                  ItemsSource="{Binding DataContext.PaceRatingOptions,
+                                                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                  SelectedItem="{Binding Rating,
+                                                                                         UpdateSourceTrigger=PropertyChanged}"
+                                                                  MinHeight="38"
+                                                                  HorizontalContentAlignment="Center"
+                                                                  VerticalContentAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Learner scores -->
+            <Border Margin="0,0,0,16">
+
+                <Border.Style>
+                    <Style TargetType="Border"
+                           BasedOn="{StaticResource CardStyle}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed"/>
+
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding UsesNumericalGrades}"
+                                               Value="True"/>
+                                    <Condition Binding="{Binding IsKindergartenRecord}"
+                                               Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel>
+
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Learner Scores"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="{Binding StatusMessage}"
+                                       Margin="0,4,0,0"
+                                       FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                                Content="+ Add WW"
+                                Command="{Binding AddWrittenWorkCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="105"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="2"
+                                Content="+ Add PT"
+                                Command="{Binding AddPerformanceTaskCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="105"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="3"
+                                Content="Create Official Columns"
+                                Command="{Binding CreateOfficialAssessmentItemsCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="170"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="4"
+                                Content="Save HPS"
+                                Command="{Binding SaveAssessmentSetupCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="105"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="5"
+                                Content="Save Scores"
+                                Command="{Binding SaveScoresCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                MinWidth="120"/>
+                    </Grid>
+
+                    <TextBlock Text="Set unused assessment columns to HPS 0. Only columns with HPS greater than zero are included."
+                               FontSize="11"
+                               Foreground="#64748B"
+                               Margin="0,0,0,12"/>
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto"
+                                  MaxHeight="520">
+
+                        <StackPanel>
+
+                            <!-- Table header -->
+                            <Border Background="#EAF2FF"
+                                    BorderBrush="#CBD5E1"
+                                    BorderThickness="1">
+
+                                <Grid Height="82">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="42"/>
+                                        <ColumnDefinition Width="230"/>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="72"/>
+                                        <ColumnDefinition Width="72"/>
+                                        <ColumnDefinition Width="72"/>
+                                        <ColumnDefinition Width="72"/>
+                                        <ColumnDefinition Width="78"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="#"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="Learner"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="Sex"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+
+                                    <ItemsControl Grid.Column="3"
+                                                  ItemsSource="{Binding AssessmentItems}">
+
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Width="90"
+                                                        Height="82"
+                                                        BorderBrush="#CBD5E1"
+                                                        BorderThickness="1,0,0,0">
+
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding AssessmentName}"
+                                                                   FontSize="10"
+                                                                   FontWeight="SemiBold"
+                                                                   TextAlignment="Center"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="3,0"/>
+
+                                                        <TextBlock Text="{Binding AssessmentDomain}"
+                                                                   FontSize="8"
+                                                                   Foreground="#64748B"
+                                                                   HorizontalAlignment="Center"
+                                                                   Margin="0,2,0,0"/>
+
+                                                        <TextBox Text="{Binding HighestPossibleScore,
+                                                                            UpdateSourceTrigger=LostFocus,
+                                                                            StringFormat={}{0:0.##}}"
+                                                                 Width="55"
+                                                                 Height="23"
+                                                                 Margin="0,4,0,0"
+                                                                 Padding="2,0"
+                                                                 FontSize="10"
+                                                                 HorizontalContentAlignment="Center"
+                                                                 VerticalContentAlignment="Center"
+                                                                 ToolTip="Highest Possible Score"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <TextBlock Grid.Column="4"
+                                               Text="WW %"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="5"
+                                               Text="PT %"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="6"
+                                               Text="EX %"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="7"
+                                               Text="Initial Grade"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="8"
+                                               Text="Term Grade"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="9"
+                                               Text="Descriptor"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Learner rows -->
+                            <ItemsControl ItemsSource="{Binding LearnerRows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Border BorderBrush="#CBD5E1"
+                                                BorderThickness="1,0,1,1"
+                                                Background="White">
+
+                                            <Grid MinHeight="52">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="42"/>
+                                                    <ColumnDefinition Width="230"/>
+                                                    <ColumnDefinition Width="75"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="72"/>
+                                                    <ColumnDefinition Width="72"/>
+                                                    <ColumnDefinition Width="72"/>
+                                                    <ColumnDefinition Width="72"/>
+                                                    <ColumnDefinition Width="78"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Number}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding LearnerName}"
+                                                           VerticalAlignment="Center"
+                                                           Margin="10,0"
+                                                           TextTrimming="CharacterEllipsis"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding Sex}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <ItemsControl Grid.Column="3"
+                                                              ItemsSource="{Binding ScoreCells}">
+
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Width="90"
+                                                                    MinHeight="52"
+                                                                    BorderBrush="#CBD5E1"
+                                                                    BorderThickness="1,0,0,0">
+
+                                                                <TextBox Text="{Binding Score,
+                                                                            UpdateSourceTrigger=PropertyChanged,
+                                                                            TargetNullValue='',
+                                                                            StringFormat={}{0:0.##}}"
+                                                                         Margin="5"
+                                                                         HorizontalContentAlignment="Center"
+                                                                         VerticalContentAlignment="Center"/>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <TextBlock Grid.Column="4"
+                                                           Text="{Binding WrittenWorkPercentage,
+                                                               StringFormat={}{0:N2}}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="5"
+                                                           Text="{Binding PerformanceTaskPercentage,
+                                                               StringFormat={}{0:N2}}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="6"
+                                                           Text="{Binding ExaminationPercentage,
+                                                               StringFormat={}{0:N2}}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="7"
+                                                           Text="{Binding InitialGrade,
+                                                               StringFormat={}{0:N2}}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="8"
+                                                           Text="{Binding TermGrade}"
+                                                           FontWeight="Bold"
+                                                           Foreground="#1D4ED8"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="9"
+                                                           Text="{Binding Descriptor}"
+                                                           FontSize="10"
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- Component grade summary -->
+            <Border>
+
+                <Border.Style>
+                    <Style TargetType="Border"
+                           BasedOn="{StaticResource CardStyle}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed"/>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding UsesComponentRecords}"
+                                         Value="True">
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel>
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="{Binding ComponentSummaryTitle}"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="The combined grade is the rounded average of the two component grades."
+                                       Margin="0,4,0,0"
+                                       FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                                Content="Prepare Component Summary"
+                                Command="{Binding LoadComponentSummaryCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                MinWidth="205"/>
+                    </Grid>
+
+                    <Border Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12"
+                            Margin="0,0,0,14">
+
+                        <TextBlock Text="Save the scores of both components first, then click Prepare Component Summary."
+                                   Foreground="#1D4ED8"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasComponentSummary}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <StackPanel>
+                            <!-- Summary header -->
+                            <Border Background="#EAF2FF"
+                                    BorderBrush="#CBD5E1"
+                                    BorderThickness="1">
+
+                                <Grid Height="52">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="170"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="#"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="Learner"
+                                               FontWeight="Bold"
+                                               Margin="12,0"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="Sex"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="3"
+                                               Text="{Binding ComponentOneName}"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="4"
+                                               Text="{Binding ComponentTwoName}"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="5"
+                                               Text="Combined Term Grade"
+                                               FontWeight="Bold"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Summary learner rows -->
+                            <ItemsControl ItemsSource="{Binding ComponentSummaryRows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="White"
+                                                BorderBrush="#CBD5E1"
+                                                BorderThickness="1,0,1,1">
+
+                                            <Grid MinHeight="48">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="50"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                    <ColumnDefinition Width="160"/>
+                                                    <ColumnDefinition Width="160"/>
+                                                    <ColumnDefinition Width="170"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Number}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding LearnerName}"
+                                                           Margin="12,0"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding Sex}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="3"
+                                                           Text="{Binding ComponentOneGradeText}"
+                                                           FontWeight="SemiBold"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="4"
+                                                           Text="{Binding ComponentTwoGradeText}"
+                                                           FontWeight="SemiBold"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+
+                                                <Border Grid.Column="5"
+                                                        Margin="10,6"
+                                                        Padding="8,4"
+                                                        Background="#DCFCE7"
+                                                        CornerRadius="6">
+
+                                                    <TextBlock Text="{Binding CombinedTermGradeText}"
+                                                               FontWeight="Bold"
+                                                               FontSize="14"
+                                                               Foreground="#15803D"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <!-- Three-term grade summary -->
+            <Border Margin="0,16,0,0">
+
+                <Border.Style>
+                    <Style TargetType="Border"
+                           BasedOn="{StaticResource CardStyle}">
+                        <Setter Property="Visibility"
+                                Value="Collapsed"/>
+
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding UsesNumericalGrades}"
+                                               Value="True"/>
+                                    <Condition Binding="{Binding IsKindergartenRecord}"
+                                               Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel>
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="All-Subject Three-Term Summary"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                            <TextBlock Text="Each term shows all subjects. Average appears when every subject has a grade."
+                   Margin="0,4,0,0"
+                   FontSize="11"
+                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+            Content="Prepare Summary"
+            Command="{Binding LoadThreeTermSummaryCommand}"
+            Style="{StaticResource PrimaryButtonStyle}"
+            MinWidth="150"
+            Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="2"
+            Content="Export PDF"
+            Command="{Binding ExportThreeTermSummaryPdfCommand}"
+            Style="{StaticResource SecondaryButtonStyle}"
+            MinWidth="125"/>
+                    </Grid>
+
+                    <Border Background="#FFF7ED"
+                            BorderBrush="#FED7AA"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12"
+                            Margin="0,0,0,14">
+
+                        <TextBlock Text="Save subject grades for each term. Incomplete subject grades remain blank."
+                                   Foreground="#C2410C"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <ItemsControl ItemsSource="{Binding TermSubjectSections}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,18"
+                                        BorderBrush="#CBD5E1"
+                                        BorderThickness="1"
+                                        Background="White">
+                                    <StackPanel>
+                                        <Border Background="#DBEAFE" Padding="10,7">
+                                            <TextBlock Text="{Binding Title}"
+                                                       FontWeight="Bold"
+                                                       FontSize="16"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                                      VerticalScrollBarVisibility="Disabled">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal" Background="#EAF2FF">
+                                                    <Border Width="50" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="No." FontWeight="Bold" HorizontalAlignment="Center"/></Border>
+                                                    <Border Width="220" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="Learner" FontWeight="Bold"/></Border>
+                                                    <Border Width="70" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="Sex" FontWeight="Bold" HorizontalAlignment="Center"/></Border>
+                                                    <ItemsControl ItemsSource="{Binding Subjects}">
+                                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate><DataTemplate>
+                                                            <Border Width="130" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1">
+                                                                <TextBlock Text="{Binding}" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                                                            </Border>
+                                                        </DataTemplate></ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <Border Width="95" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="Average" FontWeight="Bold" HorizontalAlignment="Center"/></Border>
+                                                    <Border Width="110" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,0,1"><TextBlock Text="Status" FontWeight="Bold" HorizontalAlignment="Center"/></Border>
+                                                </StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Rows}">
+                                                    <ItemsControl.ItemTemplate><DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border Width="50" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="{Binding Number}" HorizontalAlignment="Center"/></Border>
+                                                            <Border Width="220" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="{Binding LearnerName}" TextWrapping="Wrap"/></Border>
+                                                            <Border Width="70" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="{Binding Sex}" HorizontalAlignment="Center"/></Border>
+                                                            <ItemsControl ItemsSource="{Binding Grades}">
+                                                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate><DataTemplate>
+                                                                    <Border Width="130" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="{Binding GradeText}" HorizontalAlignment="Center"/></Border>
+                                                                </DataTemplate></ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                            <Border Width="95" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,1,1"><TextBlock Text="{Binding AverageText}" FontWeight="SemiBold" HorizontalAlignment="Center"/></Border>
+                                                            <Border Width="110" Padding="7" BorderBrush="#CBD5E1" BorderThickness="0,0,0,1"><TextBlock Text="{Binding Status}" HorizontalAlignment="Center"/></Border>
+                                                        </StackPanel>
+                                                    </DataTemplate></ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

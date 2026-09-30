@@ -1,0 +1,248 @@
+<UserControl x:Class="TeachFlex.Views.LessonPlannerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="WrappedBowItemTemplate">
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" MaxWidth="700" Margin="2,5"/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30">
+            <TextBlock Text="Lesson Planner" FontSize="28" FontWeight="Bold"
+                       Foreground="{StaticResource TextPrimaryBrush}"/>
+            <TextBlock Text="Weekly ILAW · 4 sessions + Day 5 weekly test · Offline"
+                       Margin="0,5,0,18" FontSize="13"
+                       Foreground="{StaticResource TextSecondaryBrush}"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="290"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Saved Plans" FontSize="18" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SchoolYearText}" FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   Margin="0,4,0,12"/>
+                        <Button Content="＋  New Lesson Plan" Command="{Binding NewPlanCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" Height="38"
+                                Margin="0,0,0,12"/>
+                        <ListBox ItemsSource="{Binding SavedPlans}"
+                                 SelectedItem="{Binding SelectedSavedPlan, Mode=TwoWay}"
+                                 DisplayMemberPath="DisplayName"
+                                 MinHeight="410"/>
+                        <Button Content="Delete Selected Plan"
+                                Command="{Binding DeletePlanCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Height="36" Margin="0,12,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Create Lesson Plan · BOW to Weekly Table" FontSize="18" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding StatusMessage}" FontSize="11"
+                                           TextWrapping="Wrap" Margin="0,5,0,0"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </StackPanel>
+                            <Button Grid.Column="2" Content="Export PDF" Height="38"
+                                    Command="{Binding ExportPdfCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Class" FontWeight="SemiBold" FontSize="11"/>
+                                <ComboBox ItemsSource="{Binding Classes}"
+                                          SelectedItem="{Binding SelectedClass, Mode=TwoWay}"
+                                          DisplayMemberPath="DisplayName" Height="36" Margin="0,5,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Subject" FontWeight="SemiBold" FontSize="11"/>
+                                <ComboBox ItemsSource="{Binding Subjects}"
+                                          SelectedItem="{Binding SelectedSubject, Mode=TwoWay}"
+                                          DisplayMemberPath="SubjectName" Height="36" Margin="0,5,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Lesson Date" FontWeight="SemiBold" FontSize="11"/>
+                                <DatePicker SelectedDate="{Binding LessonDate, Mode=TwoWay}"
+                                            Height="36" Width="145" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Padding="12" Background="#EAF2FF" CornerRadius="8" Margin="0,0,0,12">
+                            <TextBlock Text="1 · Select the BOW and at least one standard. TeachFlex will suggest a competency and objectives. 2 · Review and edit as needed. 3 · Generate a weekly draft and review it before saving." TextWrapping="Wrap"/>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock Text="Term (1–3)" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <ComboBox ItemsSource="{Binding TermChoices}" SelectedItem="{Binding TermNumber, Mode=TwoWay}" Width="72" Height="34" Margin="0,0,22,0"/>
+                            <TextBlock Text="Week" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <ComboBox ItemsSource="{Binding WeekChoices}" SelectedItem="{Binding WeekNumber, Mode=TwoWay}" Width="72" Height="34" Margin="0,0,22,0"/>
+                            <TextBlock Text="Teaching Session" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <ComboBox ItemsSource="{Binding TeachingDays}" SelectedItem="{Binding SelectedDay, Mode=TwoWay}" Width="72" Height="34"/>
+                        </StackPanel>
+                        <TextBlock Text="The suggested competency, title, and objectives follow the selected teaching session. Review and adapt them before generating a draft."
+                                   TextWrapping="Wrap" Margin="0,0,0,8" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="BOW · CURRICULUM REFERENCE" FontSize="16" FontWeight="Bold" Margin="0,8,0,2"/>
+                        <TextBlock Text="Policy Reference: DepEd Order No. 009, s. 2026 — Guidelines on the Implementation of the Three-Term School Calendar in Basic Education. Use the applicable BOW for the selected grade level, subject and term. Review the original BOW to confirm its standards, competencies and weekly coverage." TextWrapping="Wrap" FontSize="11" Margin="0,6,0,8" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="BOW Subject" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                        <ComboBox ItemsSource="{Binding BowSources}" Text="{Binding BowSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" IsTextSearchEnabled="True" Height="36"/>
+                        <TextBlock Text="Content Standard (if available)" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                        <ComboBox ItemsSource="{Binding ContentStandardChoices}" ItemTemplate="{StaticResource WrappedBowItemTemplate}" SelectedItem="{Binding SelectedContentStandardChoice, Mode=TwoWay}" Text="{Binding ContentStandard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsEditable="True" IsTextSearchEnabled="True" Height="40" MaxDropDownHeight="360"/>
+                        <TextBlock Text="{Binding ContentStandard}" TextWrapping="Wrap" Margin="0,6,0,4" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="Performance Standard (if available)" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                        <ComboBox ItemsSource="{Binding PerformanceStandardChoices}" ItemTemplate="{StaticResource WrappedBowItemTemplate}" SelectedItem="{Binding SelectedPerformanceStandardChoice, Mode=TwoWay}" Text="{Binding PerformanceStandard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsEditable="True" IsTextSearchEnabled="True" Height="40" MaxDropDownHeight="360"/>
+                        <TextBlock Text="{Binding PerformanceStandard}" TextWrapping="Wrap" Margin="0,6,0,4" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Button Content="Refresh Suggested Competency, Title and Objectives" Command="{Binding RefreshStandardSuggestionsCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}" MinHeight="46" Margin="0,4,0,6"/>
+                        <TextBlock Text="{Binding CurriculumNote}" TextWrapping="Wrap" Margin="0,10,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="Learning Competency *" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                        <ComboBox ItemsSource="{Binding CompetencyChoices}" ItemTemplate="{StaticResource WrappedBowItemTemplate}" SelectedItem="{Binding SelectedCompetencyChoice, Mode=TwoWay}" Text="{Binding LearningCompetency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" IsTextSearchEnabled="True" Height="40" MaxDropDownHeight="360"/>
+                        <TextBlock Text="{Binding LearningCompetency}" TextWrapping="Wrap" Margin="0,6,0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Expander Header="I · INTENTIONS | Lesson Title and Learning Objectives" IsExpanded="True" Margin="0,12,0,4" Padding="10">
+                          <StackPanel>
+                            <TextBlock Text="Lesson Title" Margin="0,6,0,4"/>
+                            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="34"/>
+                            <TextBlock Text="Learning Objectives" Margin="0,6,0,4"/>
+                            <TextBox Text="{Binding Objectives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="65" TextWrapping="Wrap" AcceptsReturn="True"/>
+                          </StackPanel>
+                        </Expander>
+                        <TextBlock Text="L · LEARNING EXPERIENCES" FontSize="16" FontWeight="Bold" Margin="0,14,0,2"/>
+                        <TextBlock Text="Learner needs / available materials (optional)" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                        <TextBox Text="{Binding LearnerNeeds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="48" Padding="8" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <Border Padding="14" Background="#F2F7FF" CornerRadius="8" Margin="0,16,0,8">
+                          <StackPanel>
+                            <TextBlock Text="Online AI for ILAW Lesson Drafts" FontSize="15" FontWeight="Bold"/>
+                            <TextBlock Text="Select the class, subject, BOW competency and session. TeachFlex will copy the prompt and open your selected AI chat in the browser. Press Ctrl+V to paste the prompt, then paste the response here to map it to the ILAW fields." TextWrapping="Wrap" Margin="0,6,0,8"/>
+                            <TextBlock Text="Additional Teacher Request (optional)" FontWeight="SemiBold"/>
+                            <TextBox Text="{Binding ChatPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,4,0,10"/>
+                            <Button Content="Copy Weekly Prompt · Sessions 1–4 + Test" Command="{Binding CopyWeeklyPromptCommand}" Style="{StaticResource PrimaryButtonStyle}" MinHeight="42" Margin="0,0,0,6"/>
+                            <TextBlock Text="Copies a complete weekly prompt using your selected class, subject, term, week, standards and competency. Open your AI chatbot and press Ctrl+V. Review the competency to ensure it covers the intended week. Paste the complete weekly response below. Preview ILAW Mapping will detect Sessions 1–4 and map each session separately." TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="Single-Session Prompt · Copy and Open AI Chat" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <UniformGrid Columns="2">
+                              <Button Content="Copy Prompt + Open ChatGPT" Command="{Binding OpenLessonChatCommand}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,8,8"/>
+                              <Button Content="Copy Prompt + Open Gemini" Command="{Binding OpenGeminiLessonChatCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,8"/>
+                              <Button Content="Copy Prompt + Open Copilot" Command="{Binding OpenCopilotLessonChatCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,8"/>
+                              <Button Content="Copy Prompt + Open Canva AI" Command="{Binding OpenCanvaLessonChatCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,8"/>
+                            </UniformGrid>
+                            <TextBlock Text="An internet connection and browser sign-in may be required. No API key is needed in TeachFlex. Do not include learner names or personal details in the prompt." TextWrapping="Wrap" Margin="0,10,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="AI Response · Paste Here" FontWeight="SemiBold" Margin="0,12,0,4"/>
+                            <TextBox Text="{Binding ExternalDraftText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="130" MaxHeight="260" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                              <Button Content="Paste from Clipboard" Command="{Binding PasteExternalDraftCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"/>
+                              <Button Content="Preview ILAW Mapping" Command="{Binding PreviewExternalDraftCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding ExternalDraftStatus}" TextWrapping="Wrap" Margin="0,8,0,5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="Preview of ILAW Mapping" FontWeight="SemiBold"/>
+                            <TextBox Text="{Binding ExternalDraftPreview, Mode=OneWay}" IsReadOnly="True" MinHeight="130" MaxHeight="260" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,4,0,8"/>
+                            <Button Content="Apply ILAW Mapping" Command="{Binding ApplyExternalDraftCommand}" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Left"/>
+                          </StackPanel>
+                        </Border>
+                        <Border Padding="12" Background="#F2F7FF" CornerRadius="8" Margin="0,16,0,10">
+                            <StackPanel>
+                                <TextBlock Text="Generate an Editable Weekly Table" FontWeight="Bold" FontSize="15"/>
+                                <TextBlock Text="Generate editable suggested activities for four teaching sessions and a Session 5 weekly test using the selected BOW competency. No internet connection or API key is required." TextWrapping="Wrap" Margin="0,8,0,4"/>
+                                <Button Content="Generate Weekly Draft (Sessions 1–4 + Test)" Command="{Binding GenerateWeekCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="38" Margin="0,8,0,2"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <TextBlock Text="Teaching Session" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <ComboBox ItemsSource="{Binding TeachingDays}" SelectedItem="{Binding SelectedDay, Mode=TwoWay}" Width="68" Height="34" Margin="0,0,14,0"/>
+                                    <Button Content="Generate Session Draft" Command="{Binding GenerateDayCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="36" Margin="0,0,8,0"/>
+                                    <Button Content="Make It Easier" Command="{Binding SimplifyDayCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="36"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="Edit each session below. The Teaching Session selector applies to Generate Session Draft and Make It Easier." TextWrapping="Wrap" Margin="0,8,0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Expander Header="Learning Resources" IsExpanded="True" Margin="0,12,0,0" Padding="10">
+                          <StackPanel>
+                            <TextBlock Text="Learning Resources" Margin="0,6,0,4"/>
+                            <TextBox Text="{Binding Materials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="55" TextWrapping="Wrap" AcceptsReturn="True"/>
+                          </StackPanel>
+                        </Expander>
+                        <Expander Header="Weekly Table · Session 1–5 | Learning Experiences, Assessment and Ways Forward" IsExpanded="True" Margin="0,16,0,0" Padding="10">
+                          <StackPanel>
+                            <TextBlock Text="Each session is editable. Session 5 is reserved for the weekly test." TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="SESSION 1 · Pre-Lesson / Motivation" FontWeight="Bold"/>
+                            <TextBox Text="{Binding Session1Motivation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="55" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Lesson Flow / Activities"/>
+                            <TextBox Text="{Binding Day1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="90" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Formative Checks"/><TextBox Text="{Binding Day1Assessment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="48" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="SESSION 2 · Pre-Lesson / Motivation" FontWeight="Bold" Margin="0,12,0,0"/>
+                            <TextBox Text="{Binding Session2Motivation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="55" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Lesson Flow / Activities"/>
+                            <TextBox Text="{Binding Day2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="90" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Formative Checks"/><TextBox Text="{Binding Day2Assessment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="48" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="SESSION 3 · Pre-Lesson / Motivation" FontWeight="Bold" Margin="0,12,0,0"/>
+                            <TextBox Text="{Binding Session3Motivation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="55" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Lesson Flow / Activities"/>
+                            <TextBox Text="{Binding Day3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="90" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Formative Checks"/><TextBox Text="{Binding Day3Assessment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="48" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="SESSION 4 · Pre-Lesson / Motivation" FontWeight="Bold" Margin="0,12,0,0"/>
+                            <TextBox Text="{Binding Session4Motivation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="55" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Lesson Flow / Activities"/>
+                            <TextBox Text="{Binding Day4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="90" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="Formative Checks"/><TextBox Text="{Binding Day4Assessment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="48" TextWrapping="Wrap" AcceptsReturn="True"/>
+                          </StackPanel>
+                        </Expander>
+                        <Expander Header="SESSION 5 · WEEKLY TEST" IsExpanded="True" Margin="0,16,0,0" BorderBrush="#CBD5E1" BorderThickness="1" Padding="10">
+                          <StackPanel>
+                            <TextBlock Text="Day 5 test coverage, questions and results" FontWeight="SemiBold" FontSize="11" Margin="0,10,0,4"/>
+                            <TextBox Text="{Binding WeeklyTest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="85" Padding="8" TextWrapping="Wrap" AcceptsReturn="True"/>
+                          </StackPanel>
+                        </Expander>
+                        <Expander Header="W · WAYS FORWARD · Session 1–5" IsExpanded="False" Margin="0,12,0,0" BorderBrush="#CBD5E1" BorderThickness="1" Padding="10">
+                          <StackPanel>
+                        <TextBlock Text="SESSION 1" FontWeight="Bold" Margin="0,2,0,2"/>
+                        <TextBlock Text="Extend Learning / Remediation"/>
+                        <TextBox Text="{Binding Session1ExtendLearning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="Teacher Reflection"/>
+                        <TextBox Text="{Binding Session1Reflection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="SESSION 2" FontWeight="Bold" Margin="0,10,0,2"/>
+                        <TextBlock Text="Extend Learning / Remediation"/>
+                        <TextBox Text="{Binding Session2ExtendLearning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="Teacher Reflection"/>
+                        <TextBox Text="{Binding Session2Reflection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="SESSION 3" FontWeight="Bold" Margin="0,10,0,2"/>
+                        <TextBlock Text="Extend Learning / Remediation"/>
+                        <TextBox Text="{Binding Session3ExtendLearning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="Teacher Reflection"/>
+                        <TextBox Text="{Binding Session3Reflection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="SESSION 4" FontWeight="Bold" Margin="0,10,0,2"/>
+                        <TextBlock Text="Extend Learning / Remediation"/>
+                        <TextBox Text="{Binding Session4ExtendLearning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="Teacher Reflection"/>
+                        <TextBox Text="{Binding Session4Reflection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="SESSION 5" FontWeight="Bold" Margin="0,10,0,2"/>
+                        <TextBlock Text="Extend Learning / Remediation"/>
+                        <TextBox Text="{Binding Session5ExtendLearning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        <TextBlock Text="Teacher Reflection"/>
+                        <TextBox Text="{Binding Session5Reflection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinHeight="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                          </StackPanel>
+                        </Expander>
+                        <TextBlock Text="This draft uses an offline template. Review the BOW wording and add specific activities, timing and materials before saving." FontSize="11" TextWrapping="Wrap" Margin="0,12,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Button Content="SAVE PLAN" Command="{Binding SavePlanCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="44" MinWidth="180" HorizontalAlignment="Right" Margin="0,16,0,0"/>
+                        <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,56 @@
+<UserControl x:Class="TeachFlex.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="30">
+      <TextBlock Text="Reports" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+      <TextBlock Text="Class overview mula sa naka-save na grades, attendance, at reading assessments" Margin="0,5,0,16" Foreground="{StaticResource TextSecondaryBrush}"/>
+      <Border Style="{StaticResource CardStyle}" Margin="0,0,0,14">
+        <StackPanel>
+          <TextBlock Text="{Binding SchoolYearText}" FontWeight="Bold" Margin="0,0,0,12"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="3*"/><ColumnDefinition Width="12"/>
+              <ColumnDefinition Width="*"/><ColumnDefinition Width="12"/>
+              <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0"><TextBlock Text="Class"/><ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, Mode=TwoWay}" DisplayMemberPath="DisplayName" Height="36" Margin="0,5,0,0"/></StackPanel>
+            <StackPanel Grid.Column="2"><TextBlock Text="Term"/><ComboBox SelectedValue="{Binding SelectedTerm, Mode=TwoWay}" SelectedValuePath="Tag" Height="36" Margin="0,5,0,0"><ComboBoxItem Content="Term 1" Tag="1"/><ComboBoxItem Content="Term 2" Tag="2"/><ComboBoxItem Content="Term 3" Tag="3"/></ComboBox></StackPanel>
+            <StackPanel Grid.Column="4"><TextBlock Text="Attendance month"/><DatePicker SelectedDate="{Binding SelectedMonth, Mode=TwoWay}" Height="36" Margin="0,5,0,0"/></StackPanel>
+          </Grid>
+          <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+            <Button Content="Refresh Report" Command="{Binding LoadReportCommand}" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,10,0"/>
+            <Button Content="Export Overview PDF" Command="{Binding ExportReportCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+          </StackPanel>
+          <TextBlock Text="Numerical term grades lamang ang binibilang. Para sa descriptive grades, tingnan ang learner progress report sa School Forms." TextWrapping="Wrap" Margin="0,12,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+          <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{StaticResource TextSecondaryBrush}"/>
+        </StackPanel>
+      </Border>
+      <UniformGrid Columns="3" Margin="0,0,0,14">
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="LEARNERS" FontWeight="Bold"/><TextBlock Text="{Binding LearnerCount}" FontSize="22"/></StackPanel></Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="SUBJECTS" FontWeight="Bold"/><TextBlock Text="{Binding SubjectCount}" FontSize="22"/></StackPanel></Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="TERM GRADES RECORDED" FontWeight="Bold"/><TextBlock Text="{Binding GradesRecorded}" FontSize="22"/></StackPanel></Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="PRESENT ENTRIES" FontWeight="Bold"/><TextBlock Text="{Binding PresentCount}" FontSize="22"/></StackPanel></Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="ABSENT ENTRIES" FontWeight="Bold"/><TextBlock Text="{Binding AbsentCount}" FontSize="22"/></StackPanel></Border>
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,8,8"><StackPanel><TextBlock Text="READING ASSESSMENTS" FontWeight="Bold"/><TextBlock Text="{Binding ReadingCount}" FontSize="22"/></StackPanel></Border>
+      </UniformGrid>
+      <Border Style="{StaticResource CardStyle}">
+        <StackPanel>
+          <TextBlock Text="Learner Overview" FontSize="18" FontWeight="Bold" Margin="0,0,0,8"/>
+          <DataGrid ItemsSource="{Binding LearnerRows}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" MinHeight="200" MaxHeight="480">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="#" Binding="{Binding Number}" Width="45"/>
+              <DataGridTextColumn Header="Learner" Binding="{Binding Name}" Width="2*"/>
+              <DataGridTextColumn Header="Sex" Binding="{Binding Sex}" Width="80"/>
+              <DataGridTextColumn Header="Term grades recorded" Binding="{Binding GradesRecorded}" Width="*"/>
+              <DataGridTextColumn Header="Present" Binding="{Binding Present}" Width="75"/>
+              <DataGridTextColumn Header="Absent" Binding="{Binding Absent}" Width="75"/>
+              <DataGridTextColumn Header="Reading assessments" Binding="{Binding ReadingAssessments}" Width="*"/>
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

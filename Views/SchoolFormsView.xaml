@@ -1,0 +1,697 @@
+﻿<UserControl x:Class="TeachFlex.Views.SchoolFormsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BackgroundBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Page heading -->
+            <Grid Grid.Row="0"
+                  Margin="0,0,0,22">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="School Forms"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="28"
+                               FontWeight="Bold"/>
+
+                    <TextBlock Text="Prepare official DepEd school forms using the centralized TeachFlex records."
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13"
+                               Margin="0,6,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        Background="#DCEAFE"
+                        CornerRadius="10"
+                        Padding="18,10"
+                        VerticalAlignment="Center">
+
+                    <TextBlock Text="{Binding SchoolYearText}"
+                               Foreground="#1D4ED8"
+                               FontSize="13"
+                               FontWeight="Bold"/>
+                </Border>
+            </Grid>
+
+            <!-- Class selection -->
+            <Border Grid.Row="1"
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,18">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Advisory Class"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,7"/>
+
+                        <ComboBox ItemsSource="{Binding Classes}"
+                                  SelectedItem="{Binding SelectedClass}"
+                                  DisplayMemberPath="DisplayName"
+                                  Height="44"
+                                  Padding="11,7"
+                                  FontSize="13"
+                                  Background="White"
+                                  BorderBrush="{StaticResource BorderBrush}"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="2"
+                            Content="Refresh"
+                            Command="{Binding RefreshCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            MinWidth="110"
+                            VerticalAlignment="Bottom"/>
+                </Grid>
+            </Border>
+
+            <!-- Class summary -->
+            <Grid Grid.Row="2"
+                  Margin="0,0,0,18">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Style="{StaticResource CardStyle}">
+
+                    <StackPanel>
+                        <TextBlock Text="TOTAL LEARNERS"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding LearnerCount}"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="27"
+                                   FontWeight="Bold"
+                                   Margin="0,8,0,0"/>
+
+                        <TextBlock Text="Current enrolled learners"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2"
+                        Style="{StaticResource CardStyle}">
+
+                    <StackPanel>
+                        <TextBlock Text="MALE LEARNERS"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding MaleLearnerCount}"
+                                   Foreground="#2563EB"
+                                   FontSize="27"
+                                   FontWeight="Bold"
+                                   Margin="0,8,0,0"/>
+
+                        <TextBlock Text="Included automatically"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="4"
+                        Style="{StaticResource CardStyle}">
+
+                    <StackPanel>
+                        <TextBlock Text="FEMALE LEARNERS"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding FemaleLearnerCount}"
+                                   Foreground="#A855F7"
+                                   FontSize="27"
+                                   FontWeight="Bold"
+                                   Margin="0,8,0,0"/>
+
+                        <TextBlock Text="Included automatically"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="10"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- SF1 and SF2 -->
+            <Grid Grid.Row="3"
+                  Margin="0,0,0,18">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- SF1 -->
+                <Border Grid.Column="0"
+                        Style="{StaticResource CardStyle}">
+
+                    <StackPanel>
+                        <Border Width="58"
+                                Height="58"
+                                Background="#DCEAFE"
+                                CornerRadius="29"
+                                HorizontalAlignment="Left">
+
+                            <TextBlock Text="SF1"
+                                       Foreground="#2563EB"
+                                       FontSize="17"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="School Register"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Margin="0,16,0,0"/>
+
+                        <TextBlock Text="Generate the prescribed SF1 report automatically using the current school, class, learner, family, address, and enrollment records."
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   LineHeight="19"
+                                   Margin="0,7,0,18"/>
+
+                        <Border Background="#ECFDF3"
+                                BorderBrush="#86EFAC"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,18">
+
+                            <TextBlock Text="Ready for printing • PDF"
+                                       Foreground="#15803D"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"/>
+                        </Border>
+
+                        <Button Content="Export SF1 to PDF"
+                                Command="{Binding ExportSf1Command}"
+                                IsEnabled="{Binding CanPrepareSf1}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Height="46"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- SF2 -->
+                <Border Grid.Column="2"
+                        Style="{StaticResource CardStyle}">
+
+                    <StackPanel>
+                        <Border Width="58"
+                                Height="58"
+                                Background="#FEF3C7"
+                                CornerRadius="29"
+                                HorizontalAlignment="Left">
+
+                            <TextBlock Text="SF2"
+                                       Foreground="#B45309"
+                                       FontSize="17"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="Daily Attendance Report"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Margin="0,16,0,0"/>
+
+                        <TextBlock Text="Generate the prescribed SF2 using the daily attendance records saved in the Attendance Center."
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   LineHeight="19"
+                                   Margin="0,7,0,14"/>
+
+                        <TextBlock Text="Reporting Month"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,6"/>
+
+                        <DatePicker SelectedDate="{Binding SelectedMonth,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                    Height="40"
+                                    Padding="9,5"
+                                    FontSize="12"
+                                    Background="White"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    Margin="0,0,0,12"/>
+
+                        <Border Background="#ECFDF3"
+                                BorderBrush="#86EFAC"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,18">
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Ready for printing • PDF • "
+                                           Foreground="#15803D"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock Text="{Binding SelectedMonthText}"
+                                           Foreground="#15803D"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Button Content="Export SF2 to PDF"
+                                Command="{Binding ExportSf2Command}"
+                                IsEnabled="{Binding CanPrepareSf2}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Height="46"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- SF9 -->
+            <Border Grid.Row="4"
+                    Style="{StaticResource CardStyle}">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- SF9 information -->
+                    <StackPanel Grid.Column="0">
+                        <Border Width="58"
+                                Height="58"
+                                Background="#F3E8FF"
+                                CornerRadius="29"
+                                HorizontalAlignment="Left">
+
+                            <TextBlock Text="SF9"
+                                       Foreground="#7E22CE"
+                                       FontSize="17"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="Learner Progress Report Card"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Margin="0,16,0,0"/>
+
+                        <TextBlock Text="Generate the Kindergarten Progress Report or the official Grade 1-12 SF9 using TeachFlex records."
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   LineHeight="19"
+                                   Margin="0,7,0,16"/>
+
+                        <Border Background="#FAF5FF"
+                                BorderBrush="#D8B4FE"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
+
+                            <StackPanel>
+                                <TextBlock Text="Current supported template"
+                                           Foreground="#6B21A8"
+                                           FontSize="10"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock Text="Kindergarten Progress Report • Grade 1 Descriptive • Grades 2-10 • Grade 11-12 Academic/TechPro • PDF"
+                                           Foreground="#7E22CE"
+                                           FontSize="11"
+                                           FontWeight="Bold"
+                                           TextWrapping="Wrap"
+                                           Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Learner selection and export -->
+                    <StackPanel Grid.Column="2"
+                                VerticalAlignment="Center">
+
+                        <TextBlock Text="Select Learner"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,7"/>
+
+                        <ComboBox ItemsSource="{Binding CurrentLearners}"
+                                  SelectedItem="{Binding SelectedSf9Learner,
+                                                         Mode=TwoWay}"
+                                  DisplayMemberPath="OfficialName"
+                                  IsEnabled="{Binding IsLearnerProgressReportClass}"
+                                  Height="44"
+                                  Padding="11,7"
+                                  FontSize="13"
+                                  Background="White"
+                                  BorderBrush="{StaticResource BorderBrush}"
+                                  Margin="0,0,0,12"/>
+
+                        <Border Background="#F8FAFC"
+                                BorderBrush="#CBD5E1"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,12"
+                                IsEnabled="{Binding IsRemarksEditorAvailable}">
+
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRemarksEditorAvailable}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <StackPanel>
+                                <TextBlock Text="Automatic Teacher's Remark"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13"
+                                           FontWeight="Bold"/>
+
+                                <TextBlock Text="Note sa teacher: Lalabas lamang ang automatic remarks kapag kumpleto na ang grades ng lahat ng subjects sa napiling term. Para sa Grade 1, kailangan munang kumpleto ang ratings sa limang learning areas."
+                                           Foreground="#92400E"
+                                           FontSize="11"
+                                           TextWrapping="Wrap"
+                                           Margin="0,7,0,0"/>
+
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.7*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Term"
+                                                   FontSize="10"
+                                                   FontWeight="SemiBold"/>
+
+                                        <ComboBox ItemsSource="{Binding RemarkTerms}"
+                                                  SelectedItem="{Binding SelectedRemarkTerm,
+                                                                         Mode=TwoWay}"
+                                                  Height="34"
+                                                  Margin="0,5,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="General Average"
+                                                   FontSize="10"
+                                                   FontWeight="SemiBold"/>
+
+                                        <TextBox Text="{Binding RemarkGeneralAverageText,
+                                                                Mode=OneWay}"
+                                                 Height="34"
+                                                 Margin="0,5,0,0"
+                                                 Padding="8,6"
+                                                 IsReadOnly="True"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="Performance Level"
+                                           FontSize="10"
+                                           FontWeight="SemiBold"
+                                           Margin="0,10,0,0"/>
+
+                                <ComboBox ItemsSource="{Binding RemarkPerformanceLevels}"
+                                          SelectedItem="{Binding SelectedRemarkLevel,
+                                                                 Mode=TwoWay}"
+                                          IsEnabled="{Binding IsGradeOneRemarkEditor}"
+                                          Height="34"
+                                          Margin="0,5,0,0"/>
+
+                                <StackPanel>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsStandardRemarkEditor}"
+                                                             Value="True">
+                                                    <Setter Property="Visibility"
+                                                            Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+
+                                    <TextBlock Text="Suggested Remark"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Margin="0,10,0,0"/>
+
+                                    <TextBox Text="{Binding SuggestedRemark,
+                                                            Mode=OneWay}"
+                                             MinHeight="58"
+                                             Padding="8"
+                                             Margin="0,5,0,0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"
+                                             IsReadOnly="True"/>
+
+                                    <Button Content="Generate Another Remark"
+                                            Command="{Binding GenerateAnotherRemarkCommand}"
+                                            Height="34"
+                                            Margin="0,8,0,0"/>
+
+                                    <TextBlock Text="Final Remark"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Margin="0,10,0,0"/>
+
+                                    <TextBox Text="{Binding FinalRemark,
+                                                            Mode=TwoWay,
+                                                            UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="68"
+                                             MaxLength="2000"
+                                             Padding="8"
+                                             Margin="0,5,0,0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"/>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsGradeOneRemarkEditor}"
+                                                             Value="True">
+                                                    <Setter Property="Visibility"
+                                                            Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+
+                                    <TextBlock Text="What Your Child Can Do"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Margin="0,10,0,0"/>
+
+                                    <TextBox Text="{Binding GradeOneFinalCanDo,
+                                                            Mode=TwoWay,
+                                                            UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="68"
+                                             MaxLength="2000"
+                                             Padding="8"
+                                             Margin="0,5,0,0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"/>
+
+                                    <TextBlock Text="What Your Child Is Learning to Improve"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Margin="0,10,0,0"/>
+
+                                    <TextBox Text="{Binding GradeOneFinalNeedsImprovement,
+                                                            Mode=TwoWay,
+                                                            UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="68"
+                                             MaxLength="2000"
+                                             Padding="8"
+                                             Margin="0,5,0,0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"/>
+
+                                    <TextBlock Text="Teacher Remarks"
+                                               FontSize="10"
+                                               FontWeight="SemiBold"
+                                               Margin="0,10,0,0"/>
+
+                                    <TextBox Text="{Binding GradeOneTeacherRemarks,
+                                                            Mode=TwoWay,
+                                                            UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="68"
+                                             MaxLength="2000"
+                                             Padding="8"
+                                             Margin="0,5,0,0"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"/>
+
+                                    <Button Content="Generate Another Narrative Pair"
+                                            Command="{Binding GenerateAnotherRemarkCommand}"
+                                            Height="34"
+                                            Margin="0,8,0,0"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{Binding RemarkStatus}"
+                                           Foreground="#475569"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,8,0,0"/>
+
+                                <Button Content="Approve and Save"
+                                        Command="{Binding ApproveAndSaveRemarkCommand}"
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Height="38"
+                                        Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#FFF7ED"
+                                BorderBrush="#FDBA74"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,16">
+
+                            <TextBlock Text="Select a Kindergarten or Grade 1-12 advisory class and a learner. Progress, grades, and attendance are generated automatically from TeachFlex records."
+                                       Foreground="#9A3412"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       LineHeight="17"/>
+                        </Border>
+
+                        <Button Content="Export SF9 to PDF"
+                                Command="{Binding ExportSf9Command}"
+                                IsEnabled="{Binding CanPrepareSf9}"
+                                Height="46">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource PrimaryButtonStyle}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSupportedSf9Class}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="Export Kindergarten Progress Report to PDF"
+                                Command="{Binding ExportKindergartenProgressReportCommand}"
+                                IsEnabled="{Binding CanPrepareKindergartenProgressReport}"
+                                Height="46">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource PrimaryButtonStyle}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsKindergartenClass}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="5" Style="{StaticResource CardStyle}" Margin="0,18,0,0">
+                <StackPanel>
+                    <TextBlock Text="Grade Slip for Parents" FontSize="20" FontWeight="Bold"/>
+                    <TextBlock Text="Lahat ng subjects sa iisang PDF, tig-isang pahina bawat subject. Kinukuha ang naka-save na scores sa ECR. Para sa Kinder at Grade 1, gamitin ang descriptive progress report sa SF9."
+                               TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,14"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/><ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Learner"/>
+                            <ComboBox ItemsSource="{Binding CurrentLearners}" SelectedItem="{Binding SelectedSf9Learner, Mode=TwoWay}"
+                                      DisplayMemberPath="OfficialName" Height="36" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Term"/>
+                            <ComboBox SelectedValue="{Binding GradeSlipTerm, Mode=TwoWay}" SelectedValuePath="Tag" Height="36" Margin="0,5,0,0">
+                                <ComboBoxItem Content="Term 1" Tag="1"/>
+                                <ComboBoxItem Content="Term 2" Tag="2"/>
+                                <ComboBoxItem Content="Term 3" Tag="3"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                    <Button Content="Export Grade Slip PDF" Command="{Binding ExportGradeSlipCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Left" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Grid.Row="6"
+                       Text="{Binding StatusMessage}"
+                       Foreground="{StaticResource TextSecondaryBrush}"
+                       FontSize="11"
+                       Margin="0,16,0,0"/>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

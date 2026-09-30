@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../TeachFlex.IlawServer/TeachFlex.IlawServer.csproj" />
+  <Project Path="TeachFlex.csproj" />
+</Solution>
