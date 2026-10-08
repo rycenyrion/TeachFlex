@@ -1,0 +1,60 @@
+name: Build and Release TeachFlex
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout TeachFlex
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore TeachFlex.csproj
+
+      - name: Publish TeachFlex
+        run: >
+          dotnet publish TeachFlex.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          --output publish
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Create ZIP package
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME
+          $zipName = "TeachFlex-$version-win-x64.zip"
+
+          Compress-Archive `
+            -Path "publish\*" `
+            -DestinationPath $zipName `
+            -Force
+
+          "PACKAGE_NAME=$zipName" | Out-File `
+            -FilePath $env:GITHUB_ENV `
+            -Append
+
+      - name: Create GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$env:GITHUB_REF_NAME" "$env:PACKAGE_NAME" `
+            --repo "$env:GITHUB_REPOSITORY" `
+            --title "TeachFlex $env:GITHUB_REF_NAME" `
+            --generate-notes
