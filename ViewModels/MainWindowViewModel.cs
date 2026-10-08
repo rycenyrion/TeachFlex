@@ -413,6 +413,13 @@ Func<BackupRestoreViewModel>
             {
                 return _schoolFormsViewModelFactory();
             }
+
+            if (pageKey.Equals(
+                    "About",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return new AboutViewModel();
+            }
             return new ModuleViewModel(
                 GetPageTitle(
                     pageKey),
