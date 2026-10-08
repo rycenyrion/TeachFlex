@@ -29,7 +29,11 @@ jobs:
 
       - name: Restore dependencies
         shell: pwsh
-        run: msbuild TeachFlex.csproj /t:Restore /p:Configuration=Release
+        run: >
+          msbuild TeachFlex.csproj
+          /t:Restore
+          /p:Configuration=Release
+          /p:RuntimeIdentifier=win-x64
 
       - name: Publish TeachFlex
         shell: pwsh
