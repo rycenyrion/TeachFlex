@@ -15,15 +15,15 @@ jobs:
 
     steps:
       - name: Checkout TeachFlex
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0.x"
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
         with:
           msbuild-architecture: x64
 
@@ -56,22 +56,34 @@ jobs:
 
           $zipName = "TeachFlex-$version-win-x64.zip"
 
-          Compress-Archive `
-            -Path "publish\*" `
-            -DestinationPath $zipName `
-            -Force
+          Compress-Archive -Path "publish\*" -DestinationPath $zipName -Force
 
-          "PACKAGE_NAME=$zipName" | Out-File `
-            -FilePath $env:GITHUB_ENV `
-            -Append
+          "PACKAGE_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Create GitHub Release
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: TeachFlex-${{ github.ref_name }}-win-x64
+          path: ${{ env.PACKAGE_NAME }}
+          if-no-files-found: error
+
+      - name: Publish ZIP to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$env:GITHUB_REF_NAME" "$env:PACKAGE_NAME" `
-            --repo "$env:GITHUB_REPOSITORY" `
-            --title "TeachFlex $env:GITHUB_REF_NAME" `
-            --generate-notes
+          $tag = $env:GITHUB_REF_NAME
+          $repo = $env:GITHUB_REPOSITORY
+          $zip = $env:PACKAGE_NAME
+
+          gh release view "$tag" --repo "$repo" *> $null
+
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release $tag already exists. Uploading package to the existing release..."
+            gh release upload "$tag" "$zip" --repo "$repo" --clobber
+          }
+          else {
+            Write-Host "Release $tag does not exist. Creating release and uploading package..."
+            gh release create "$tag" "$zip" --repo "$repo" --title "TeachFlex $tag" --generate-notes
+          }
