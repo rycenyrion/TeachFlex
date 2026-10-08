@@ -18,6 +18,10 @@
             <views:BackupRestoreView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModels:AboutViewModel}">
+            <views:AboutView/>
+        </DataTemplate>
+
         <BooleanToVisibilityConverter
             x:Key="BooleanToVisibilityConverter"/>
 
