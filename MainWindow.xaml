@@ -385,6 +385,27 @@
                                                Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </StackPanel>
                         </Button>
+
+                        <Button Tag="Update"
+                                Command="{Binding NavigateCommand}"
+                                CommandParameter="Update"
+                                Style="{StaticResource ActiveSidebarButtonStyle}"
+                                ToolTip="UPDATE">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="↻"
+                                           Width="32"
+                                           FontSize="17"
+                                           FontWeight="Bold"
+                                           Foreground="{Binding Foreground,
+                                               RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                <TextBlock Text="UPDATE"
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding DataContext.IsSidebarExpanded,
+                                               RelativeSource={RelativeSource AncestorType=Window},
+                                               Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </Button>
+
                         <Button Tag="Settings"
                                 Command="{Binding NavigateCommand}"
                                 CommandParameter="Settings"
@@ -399,6 +420,27 @@
                                                RelativeSource={RelativeSource AncestorType=Button}}"/>
 
                                 <TextBlock Text="Settings"
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding DataContext.IsSidebarExpanded,
+                                               RelativeSource={RelativeSource AncestorType=Window},
+                                               Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </Button>
+
+
+                        <Button Tag="Themes"
+                                Command="{Binding NavigateCommand}"
+                                CommandParameter="Themes"
+                                Style="{StaticResource ActiveSidebarButtonStyle}"
+                                ToolTip="Themes">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="◐"
+                                           Width="32"
+                                           FontSize="17"
+                                           FontWeight="Bold"
+                                           Foreground="{Binding Foreground,
+                                               RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                <TextBlock Text="Themes"
                                            VerticalAlignment="Center"
                                            Visibility="{Binding DataContext.IsSidebarExpanded,
                                                RelativeSource={RelativeSource AncestorType=Window},
