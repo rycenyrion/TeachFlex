@@ -474,6 +474,12 @@ Func<BackupRestoreViewModel>
                 "FileManager" =>
                     "File Manager",
 
+                "Update" =>
+                    "UPDATE",
+
+                "Themes" =>
+                    "Themes",
+
                 "AITeachingAssistant" =>
                     "AI Teaching Assistant",
 
@@ -541,6 +547,12 @@ Func<BackupRestoreViewModel>
                 "FileManager" =>
                     "Organize TeachFlex documents, lesson plans, assessments, presentations, and school forms.",
 
+                "Update" =>
+                    "Check for and install available TeachFlex updates.",
+
+                "Themes" =>
+                    "Choose and manage the visual theme of the TeachFlex workspace.",
+
                 "AITeachingAssistant" =>
                     "Generate editable teaching materials, strategies, remediation, and enrichment suggestions.",
 
@@ -595,6 +607,8 @@ Func<BackupRestoreViewModel>
                     "Scheduled for Phase 7",
 
                 "FileManager" or
+                "Update" or
+                "Themes" or
                 "About" =>
                     "Scheduled for final polishing",
 
