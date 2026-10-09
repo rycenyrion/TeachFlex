@@ -420,6 +420,13 @@ Func<BackupRestoreViewModel>
             {
                 return new AboutViewModel();
             }
+
+            if (pageKey.Equals(
+                    "Themes",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return new ThemesViewModel();
+            }
             return new ModuleViewModel(
                 GetPageTitle(
                     pageKey),
