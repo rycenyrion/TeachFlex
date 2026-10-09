@@ -1,0 +1,95 @@
+<UserControl x:Class="TeachFlex.Views.ThemesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TeachFlex.ViewModels">
+    <Grid Background="{DynamicResource BackgroundBrush}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="28">
+                <TextBlock Text="Appearance"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           FontSize="26"
+                           FontWeight="Bold"/>
+                <TextBlock Text="Choose a TeachFlex theme. Your selection is saved on this computer."
+                           Margin="0,6,0,22"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           FontSize="13"
+                           TextWrapping="Wrap"/>
+                <ItemsControl ItemsSource="{Binding ThemeOptions}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.SelectThemeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="0,0,14,14"
+                                    Padding="0"
+                                    Background="{DynamicResource SurfaceBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Cursor="Hand">
+                                <Border Padding="16"
+                                        CornerRadius="12"
+                                        BorderThickness="2"
+                                        BorderBrush="Transparent">
+                                    <StackPanel>
+                                        <Border Height="76"
+                                                CornerRadius="8"
+                                                Background="{Binding Sidebar}"
+                                                BorderBrush="{Binding Border}"
+                                                BorderThickness="1">
+                                            <Grid Margin="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="36"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Background="{Binding Primary}"
+                                                        CornerRadius="4"
+                                                        Margin="0,0,5,0"/>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <Border Height="7" Width="70" HorizontalAlignment="Left" Background="{Binding TextPrimary}" CornerRadius="3" Margin="0,0,0,6"/>
+                                                    <Border Height="5" Width="100" HorizontalAlignment="Left" Background="{Binding TextSecondary}" CornerRadius="3"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Text="{Binding Name}"
+                                                   Margin="0,12,0,0"
+                                                   FontSize="15"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        <TextBlock Text="{Binding Description}"
+                                                   Margin="0,5,0,0"
+                                                   FontSize="12"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="{Binding Name, StringFormat=Selected: {0}}"
+                                                   Margin="0,10,0,0"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource PrimaryBrush}"
+                                                   Visibility="Collapsed"/>
+                                    </StackPanel>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Content="Apply Theme"
+                        Command="{Binding ApplyThemeCommand}"
+                        HorizontalAlignment="Left"
+                        Padding="24,11"
+                        Margin="0,8,0,0"
+                        Background="{DynamicResource PrimaryBrush}"
+                        Foreground="White"
+                        BorderThickness="0"
+                        FontWeight="SemiBold"
+                        Cursor="Hand"/>
+                <TextBlock Text="{Binding Status}"
+                           Margin="0,14,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
