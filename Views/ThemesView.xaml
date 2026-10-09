@@ -9,7 +9,7 @@
                            Foreground="{DynamicResource TextPrimaryBrush}"
                            FontSize="26"
                            FontWeight="Bold"/>
-                <TextBlock Text="Choose a TeachFlex theme. Your selection is saved on this computer."
+                <TextBlock Text="Select the supported TeachFlex appearance. Other color schemes are temporarily unavailable while we prepare every page for consistent, readable colors."
                            Margin="0,6,0,22"
                            Foreground="{DynamicResource TextSecondaryBrush}"
                            FontSize="13"
@@ -17,7 +17,7 @@
                 <ItemsControl ItemsSource="{Binding ThemeOptions}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="3"/>
+                            <UniformGrid Columns="1"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
