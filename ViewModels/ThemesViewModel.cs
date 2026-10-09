@@ -117,19 +117,39 @@ namespace TeachFlex.ViewModels
             SetColor(resources, "BorderColor", theme.Border);
         }
 
+        private static System.Windows.ResourceDictionary? FindDictionary(
+            System.Windows.ResourceDictionary dictionary, string key)
+        {
+            if (dictionary.Contains(key))
+                return dictionary;
+
+            foreach (var merged in dictionary.MergedDictionaries)
+            {
+                var found = FindDictionary(merged, key);
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
+
         private static void SetBrush(System.Windows.ResourceDictionary resources, string key, string hex)
         {
-            if (!resources.Contains(key)) return;
-            if (resources[key] is SolidColorBrush brush && !brush.IsFrozen)
-                brush.Color = (Color)ColorConverter.ConvertFromString(hex);
+            var dictionary = FindDictionary(resources, key);
+            if (dictionary == null) return;
+
+            var color = (Color)ColorConverter.ConvertFromString(hex);
+            if (dictionary[key] is SolidColorBrush brush && !brush.IsFrozen)
+                brush.Color = color;
             else
-                resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+                dictionary[key] = new SolidColorBrush(color);
         }
 
         private static void SetColor(System.Windows.ResourceDictionary resources, string key, string hex)
         {
-            if (resources.Contains(key))
-                resources[key] = (Color)ColorConverter.ConvertFromString(hex);
+            var dictionary = FindDictionary(resources, key);
+            if (dictionary != null)
+                dictionary[key] = (Color)ColorConverter.ConvertFromString(hex);
         }
 
         public sealed class ThemeOption
